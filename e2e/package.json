@@ -1,0 +1,23 @@
+{
+  "name": "e2e",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "cypress run",
+    "test:ui": "cypress run --config-file cypress.ui.config.ts",
+    "test:all": "npm run test && npm run test:ui",
+    "cypress:open": "cypress open"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "cypress": "^15.21.0",
+    "typescript": "^7.0.2"
+  },
+  "allowScripts": {
+    "cypress@15.21.0": true
+  }
+}

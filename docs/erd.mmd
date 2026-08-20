@@ -1,0 +1,47 @@
+erDiagram
+    PACKAGES ||--o{ PACKAGE_FLIGHTS : includes
+    FLIGHT_DETAILS ||--o{ PACKAGE_FLIGHTS : "part of"
+    HOTELS ||--o{ PACKAGES : "used by"
+    TRAVEL_INSURANCE ||--o{ PACKAGES : "used by"
+    PACKAGES ||--o{ BOOKINGS : has
+
+    PACKAGES {
+        uuid id PK
+        int available_spots
+        uuid hotel_id FK
+        uuid insurance_id FK
+    }
+
+    FLIGHT_DETAILS {
+        uuid id PK
+        varchar origin
+        varchar destination
+        timestamptz departure_time
+        timestamptz arrival_time
+        int flight_time_minutes
+        numeric price
+    }
+
+    HOTELS {
+        uuid id PK
+        varchar name
+        int nights
+        numeric price
+    }
+
+    TRAVEL_INSURANCE {
+        uuid id PK
+        varchar coverage_details
+        numeric price
+    }
+
+    PACKAGE_FLIGHTS {
+        uuid package_id PK,FK
+        uuid flight_id PK,FK
+    }
+
+    BOOKINGS {
+        uuid id PK
+        uuid package_id FK
+        int seats_booked
+    }

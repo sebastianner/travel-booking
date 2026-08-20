@@ -1,0 +1,24 @@
+# dependencies
+node_modules/
+
+# builds
+dist/
+.next/
+out/
+
+# env
+.env
+.env.local
+.env.*.local
+
+# logs
+npm-debug.log*
+*.log
+
+# OS
+.DS_Store
+
+# cypress
+e2e/cypress/videos/
+e2e/cypress/screenshots/
+e2e/cypress/downloads/
