@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { usePackageDetail } from '@/lib/hooks';
 import { useBookingStore } from '@/store/bookingStore';
@@ -20,7 +20,12 @@ export default function PackageDetailPage() {
   const router = useRouter();
   const { packageDetail, notFound, isLoading, error, refresh } = usePackageDetail(params.id);
   const startBooking = useBookingStore((s) => s.startBooking);
+  const submitBooking = useBookingStore((s) => s.submitBooking);
   const [guests, setGuests] = useState(1);
+  const [isBooking, setIsBooking] = useState(false);
+  // Belt-and-suspenders against a double-click firing two submissions before the
+  // `disabled` state has committed - the DOM attribute alone isn't synchronous enough.
+  const submittingRef = useRef(false);
 
   if (isLoading) {
     return (
@@ -77,8 +82,14 @@ export default function PackageDetailPage() {
 
   const packageTotal = packageDetail.pricePerPerson * guests;
 
-  const handleBook = () => {
+  const handleBook = async () => {
+    if (submittingRef.current) return;
+    submittingRef.current = true;
+    setIsBooking(true);
+
     startBooking(packageDetail.id, guests);
+    await submitBooking();
+
     router.push(`/packages/${packageDetail.id}/booking`);
   };
 
@@ -146,8 +157,14 @@ export default function PackageDetailPage() {
             </div>
           )}
 
-          <Button variant="primary" fullWidth disabled={soldOut} onClick={handleBook} data-testid="book-button">
-            {soldOut ? 'Sold out' : `Book · ${formatCurrency(packageTotal)}`}
+          <Button
+            variant="primary"
+            fullWidth
+            disabled={soldOut || isBooking}
+            onClick={handleBook}
+            data-testid="book-button"
+          >
+            {soldOut ? 'Sold out' : isBooking ? 'Confirming…' : `Book · ${formatCurrency(packageTotal)}`}
           </Button>
         </div>
       </div>

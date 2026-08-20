@@ -164,6 +164,13 @@ describe('Booking flow: success', () => {
         cy.get('[data-testid="total-paid"]').should('contain.text', '$');
         cy.contains('2 passengers').should('be.visible');
 
+        // The confirmation screen looks identical whether the booking submitted once or
+        // twice (a double-submission bug here once decremented availability by 4 instead
+        // of 2). Only a live re-check of availability actually catches that regression.
+        liveDetail(candidateId).then((afterBooking) => {
+          expect(afterBooking.availableSpots).to.eq(live.availableSpots - 2);
+        });
+
         cy.contains('button', 'Back to home').click();
         cy.url().should('eq', Cypress.config().baseUrl + '/');
       });

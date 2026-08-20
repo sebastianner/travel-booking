@@ -85,12 +85,15 @@ Mobile-first, 3 screens (`frontend/src/app/`):
 - `/packages/[id]`: full detail, schedule, included items (flights/hotel/insurance) with
   individual prices, live availability, a guest stepper clamped to `[1, availableSpots]`
   (both buttons disable at their bound, amber warning when pinned at the availability
-  ceiling), and a "Book" button that's disabled outright when sold out.
-- `/packages/[id]/booking`: the booking-maker page. Reads the package + seat count picked on
-  the detail screen from a Zustand store, submits the booking on mount, and renders success
-  or error **on this same page** based on the response, no separate confirm step. The error
-  view shows requested vs. actually-available spots side by side and states plainly that no
-  charge was made.
+  ceiling), and a "Book" button that's disabled outright when sold out. Clicking "Book"
+  submits the booking directly (button shows "Confirming…" and disables while in flight,
+  guarded against a double-click firing two requests) and only navigates once the result is
+  known, so the booking-maker page never has to trigger a mutation itself.
+- `/packages/[id]/booking`: the booking-maker page. Reads the already-known result (package +
+  seat count + outcome) from a Zustand store and renders success or error **on this same
+  page**, no separate confirm step. Landing here without a matching result (direct link,
+  refresh, back button) redirects back to the detail page. The error view shows requested
+  vs. actually-available spots side by side and states plainly that no charge was made.
 
 State: Zustand only for the cross-page booking flow (package id, seat count, submission
 status/result/error). Presentational components are plain props in, callbacks out, no

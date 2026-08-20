@@ -19,29 +19,27 @@ export default function BookingMakerPage() {
   const status = useBookingStore((s) => s.status);
   const result = useBookingStore((s) => s.result);
   const error = useBookingStore((s) => s.error);
-  const submitBooking = useBookingStore((s) => s.submitBooking);
 
   const { packageDetail } = usePackageDetail(params.id);
 
+  // The actual booking POST happens on the detail page's "Book" button, before navigating
+  // here - by the time this page is reached, status is already 'success' or 'error'. This
+  // effect only handles arriving with nothing to show (direct link, refresh, back button):
+  // there's no pending booking for this package, so bounce back to pick seats again.
+  const hasResult = status === 'success' || status === 'error';
+
   useEffect(() => {
-    if (packageId !== params.id) {
-      // No booking in progress for this package (direct link, refresh, back button) -
-      // there's nothing to submit, send the user back to pick seats again.
+    if (packageId !== params.id || !hasResult) {
       router.replace(`/packages/${params.id}`);
-      return;
-    }
-    if (status === 'idle') {
-      void submitBooking();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [packageId, params.id]);
+  }, [packageId, params.id, hasResult]);
 
-  if (packageId !== params.id || status === 'idle' || status === 'loading') {
+  if (packageId !== params.id || !hasResult) {
     return (
       <PageShell width="narrow" center>
-        <div className="flex flex-col items-center gap-3 py-16 text-center">
+        <div className="flex justify-center py-16">
           <Spinner className="h-8 w-8" />
-          <p className="text-sm text-slate-500">Confirming your booking…</p>
         </div>
       </PageShell>
     );
