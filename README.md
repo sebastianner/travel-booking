@@ -99,10 +99,11 @@ Mobile-first, 3 screens (`frontend/src/app/`):
   refresh, back button) redirects back to the detail page. The error view shows requested
   vs. actually-available spots side by side and states plainly that no charge was made.
 
-State: Zustand only for the cross-page booking flow (package id, seat count, submission
-status/result/error). Presentational components are plain props in, callbacks out, no
-store/fetch coupling inside them. Data fetching: SWR wrapping the two `GET` endpoints for
-client-side caching/dedup (on top of, not instead of, the backend's own Redis cache).
+- **State**: Zustand only for the cross-page booking flow (package id, seat count, submission
+  status/result/error). Presentational components are plain props in, callbacks out, no
+  store/fetch coupling inside them.
+- **Data fetching**: SWR wrapping the two `GET` endpoints for client-side caching/dedup (on
+  top of, not instead of, the backend's own Redis cache).
 
 ## E2E tests
 
