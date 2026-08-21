@@ -54,6 +54,8 @@ services:
     restart: unless-stopped
     env_file:
       - .env
+    environment:
+      PORT: 3000
     ports:
       - "${FRONTEND_PORT:-3000}:3000"
     depends_on:
