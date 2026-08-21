@@ -34,7 +34,11 @@ The backend container runs migrations then seed data automatically on every star
 
 ## Data model
 
-See `docs/erd.mmd`. Plain SQL migrations, no ORM (`backend/src/migrations/*.sql`, run via
+See `docs/erd.mmd`.
+
+![Entity relationship diagram](docs/diagram.png)
+
+Plain SQL migrations, no ORM (`backend/src/migrations/*.sql`, run via
 `backend/src/scripts/migrate.ts`). Seed data: `backend/src/seed/seed.sql`, run via
 `backend/src/scripts/seed.ts`. To run either manually against a running stack:
 
@@ -147,7 +151,7 @@ availability after testing.
 │       ├── store/          # bookingStore.ts (Zustand)
 │       └── lib/            # api.ts, hooks.ts (SWR), types.ts, format.ts
 ├── e2e/                  # Cypress: API suite + real-browser UI suite
-├── docs/erd.mmd          # entity relationship diagram
+├── docs/                 # erd.mmd (source) + diagram.png (rendered ERD)
 ├── docker-compose.yml
 ├── .env.example
 └── README.md
