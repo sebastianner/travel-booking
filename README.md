@@ -175,17 +175,19 @@ and correcting its output where those constraints weren't specific enough.
    POST with the number of seats requested. Handle overbooking errors, e.g. requesting 5 seats
    when fewer are available, with clear error states."
 
-**What I changed/rejected**: Claude's first schema draft mirrored the flights bridge table for
-hotels and insurance too. I rejected that: a package has exactly one hotel and one insurance,
-so a many-to-many bridge was unwarranted complexity; a direct FK on `packages` was the right
-fit. The bridge table stayed only for flights, where a package genuinely has multiple legs.
-Separately, Claude's first pass at the detail page fired the booking submission from a
-`useEffect` reacting to store state. I rejected that too: a user-initiated mutation like this
-belongs on a direct `onClick` handler, not an effect, since an effect reacting to state is the
-wrong trigger for something that should happen exactly once, exactly when the user clicks.
-`handleBook` in `frontend/src/app/packages/[id]/page.tsx` is the corrected version; the
-booking-maker page's own `useEffect` is left only to redirect when landing there without a
-result (direct link, refresh, back button), never to trigger a mutation itself.
+**What I changed/rejected**:
+1. *Schema*: Claude's first schema draft mirrored the flights bridge table for hotels and
+   insurance too. I rejected that: a package has exactly one hotel and one insurance, so a
+   many-to-many bridge was unwarranted complexity; a direct FK on `packages` was the right
+   fit. The bridge table stayed only for flights, where a package genuinely has multiple legs.
+2. *Booking submission trigger*: Claude's first pass at the detail page fired the booking
+   submission from a `useEffect` reacting to store state. I rejected that too: a
+   user-initiated mutation like this belongs on a direct `onClick` handler, not an effect,
+   since an effect reacting to state is the wrong trigger for something that should happen
+   exactly once, exactly when the user clicks. `handleBook` in
+   `frontend/src/app/packages/[id]/page.tsx` is the corrected version; the booking-maker
+   page's own `useEffect` is left only to redirect when landing there without a result
+   (direct link, refresh, back button), never to trigger a mutation itself.
 
 **Autonomous decision**: I'd decide implementation details myself, the kind that change how
 the code is written, not what the product does. When a successful booking needed to also
