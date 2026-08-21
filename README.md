@@ -176,10 +176,12 @@ and correcting its output where those constraints weren't specific enough.
    when fewer are available, with clear error states."
 
 **What I changed/rejected**:
-1. *Schema*: Claude's first schema draft mirrored the flights bridge table for hotels and
-   insurance too. I rejected that: a package has exactly one hotel and one insurance, so a
+1. *Schema*: Claude's first schema draft mirrored the `package_flights` bridge table for
+   hotels and insurance too, which would have meant `package_hotels` and `package_insurance`
+   bridge tables. I rejected that: a package has exactly one hotel and one insurance, so a
    many-to-many bridge was unwarranted complexity; a direct FK on `packages` was the right
-   fit. The bridge table stayed only for flights, where a package genuinely has multiple legs.
+   fit. The `package_flights` bridge table stayed only for flights, where a package genuinely
+   has multiple legs.
 2. *Booking submission trigger*: Claude's first pass at the detail page fired the booking
    submission from a `useEffect` reacting to store state. I rejected that too: a
    user-initiated mutation like this belongs on a direct `onClick` handler, not an effect,
